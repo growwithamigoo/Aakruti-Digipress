@@ -1,4 +1,6 @@
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+
 const prisma = new PrismaClient()
 
 async function main() {
@@ -119,7 +121,7 @@ async function main() {
   }
 
   // Helper to connect occasions
-  const getOccasions = (tags) => tags.map(t => ({
+  const getOccasions = (tags: string[]) => tags.map((t: string) => ({
     occasion: { connect: { slug: t.toLowerCase().replace(/ /g, '-') } }
   }))
 
@@ -286,7 +288,6 @@ async function main() {
   }
 
   // 6. Admin User
-  const bcrypt = require('bcryptjs');
   const adminEmail = 'admin@aakrutidigipress.com';
   const existingAdmin = await prisma.admin.findUnique({ where: { email: adminEmail } });
   
