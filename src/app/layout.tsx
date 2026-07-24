@@ -16,6 +16,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Aakruti Digipress | Premium Wedding Album Printing Vijayawada",
   description: "Luxury photobook printing and binding in Vijayawada. Specializing in Telugu wedding albums, engagement books, and professional photo prints.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
