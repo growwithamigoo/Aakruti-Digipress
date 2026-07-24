@@ -14,9 +14,9 @@ export default async function OccasionsPage() {
   // Map categories to some placeholder images and descriptions for the luxury layout
   const occasionData: Record<string, { image: string, desc: string }> = {
     'wedding': { image: '/assets/hero_telugu_wedding.png', desc: 'Preserve every ritual, from the Jeelakarra Bellam to the final farewell, in exquisite lay-flat spreads.' },
-    'engagement': { image: '/assets/premium_wedding_album.png', desc: 'Beautiful beginnings in print. Capture the promise of a lifetime.' },
+    'engagement': { image: '/assets/premium_wedding_album1.png', desc: 'Beautiful beginnings in print. Capture the promise of a lifetime.' },
     'first-birthday': { image: '/assets/layflat_album.png', desc: 'The little expressions you will treasure forever, printed with premium craftsmanship.' },
-    'shashtipoorthi': { image: '/assets/premium_wedding_album.png', desc: 'Celebrating sixty years of togetherness, family and blessings.' },
+    'shashtipoorthi': { image: '/assets/premium_wedding_album1.png', desc: 'Celebrating sixty years of togetherness, family and blessings.' },
   };
 
   return (

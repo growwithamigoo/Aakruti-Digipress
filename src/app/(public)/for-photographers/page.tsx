@@ -25,7 +25,7 @@ export default function ForPhotographersPage() {
       <section className="py-24 container mx-auto px-4 md:px-8">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center max-w-7xl mx-auto bg-white rounded-3xl p-8 md:p-16 shadow-2xl border border-gray-100">
           <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-4 border-gray-50">
-             <Image src="/assets/premium_wedding_album.png" alt="Photographer Sample Kit" fill className="object-cover" />
+             <Image src="/assets/premium_wedding_album1.png" alt="Photographer Sample Kit" fill className="object-cover" />
           </div>
           <div className="w-full lg:w-1/2 space-y-8">
             <FadeIn>
