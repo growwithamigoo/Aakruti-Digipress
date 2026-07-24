@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// --- PORTFOLIO (Old Event Galleries) ---
+
+model PortfolioCategory {
+  id        String             @id @default(cuid())
+  name      String             @unique
+  slug      String             @unique
+  projects  PortfolioProject[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+model PortfolioProject {
+  id               String                  @id @default(cuid())
+  title            String
+  slug             String                  @unique
+  shortDescription String?
+  description      String?
+  eventYear        String?
+  coverImage       String?
+  isPublished      Boolean                 @default(false)
+  isFeatured       Boolean                 @default(false)
+  categoryId       String
+  category         PortfolioCategory       @relation(fields: [categoryId], references: [id])
+  images           PortfolioProjectImage[]
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+}
+
+model PortfolioProjectImage {
+  id         String           @id @default(cuid())
+  url        String
+  altText    String?
+  orderIndex Int              @default(0)
+  projectId  String
+  project    PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+}
+
+// --- ALBUM PRODUCTS CATALOGUE ---
+
+model AlbumCollection {
+  id           String         @id @default(cuid())
+  name         String         @unique
+  slug         String         @unique
+  description  String?
+  displayOrder Int            @default(0)
+  isActive     Boolean        @default(true)
+  products     AlbumProduct[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model AlbumOccasion {
+  id       String                  @id @default(cuid())
+  name     String                  @unique
+  slug     String                  @unique
+  isActive Boolean                 @default(true)
+  products AlbumProductOccasion[]
+}
+
+model AlbumProduct {
+  id                   String                 @id @default(cuid())
+  collectionId         String
+  collection           AlbumCollection        @relation(fields: [collectionId], references: [id])
+  name                 String
+  slug                 String                 @unique
+  shortDescription     String?
+  description          String?
+  coverMaterial        String?
+  albumStyle           String?
+  mainImage            String?
+  availableSizes       String? // JSON string or comma-separated
+  availableColours     String? // JSON string or comma-separated
+  customisationOptions String? // JSON string or comma-separated
+  isFeatured           Boolean                @default(false)
+  isBestseller         Boolean                @default(false)
+  isNew                Boolean                @default(false)
+  status               String                 @default("Draft") // Draft, Published
+  displayOrder         Int                    @default(0)
+  seoTitle             String?
+  seoDescription       String?
+  images               AlbumProductImage[]
+  occasions            AlbumProductOccasion[]
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+}
+
+model AlbumProductOccasion {
+  albumProductId String
+  albumProduct   AlbumProduct  @relation(fields: [albumProductId], references: [id], onDelete: Cascade)
+  occasionId     String
+  occasion       AlbumOccasion @relation(fields: [occasionId], references: [id], onDelete: Cascade)
+
+  @@id([albumProductId, occasionId])
+}
+
+model AlbumProductImage {
+  id             String       @id @default(cuid())
+  albumProductId String
+  albumProduct   AlbumProduct @relation(fields: [albumProductId], references: [id], onDelete: Cascade)
+  imagePath      String
+  imageType      String?      // e.g. "cover", "spine", "open_spread", "box"
+  altText        String?
+  displayOrder   Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+
+model Enquiry {
+  id          String   @id @default(cuid())
+  name        String
+  mobile      String
+  studioName  String?
+  occasion    String?
+  albumType   String?
+  message     String
+  status      String   @default("New") // New, Contacted, Completed, Archived
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Admin {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password_hash String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
