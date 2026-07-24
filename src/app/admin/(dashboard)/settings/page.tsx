@@ -1,4 +1,5 @@
 import { Settings, Shield, User, Bell } from "lucide-react";
+import ChangePasswordModal from "@/components/admin/ChangePasswordModal";
 
 export default function SettingsPage() {
   return (
@@ -32,7 +33,7 @@ export default function SettingsPage() {
                   <div className="text-sm text-gray-500">Update your account password</div>
                 </div>
               </div>
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-800">Update</button>
+              <ChangePasswordModal />
             </div>
 
             <div className="flex items-center justify-between py-3 border-b border-gray-50">
