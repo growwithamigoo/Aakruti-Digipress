@@ -204,7 +204,7 @@ async function main() {
       slug: 'traditional-telugu-wedding-album',
       collectionSlug: 'aakruti-heritage',
       shortDescription: 'Temple-red cover with subtle gold Telugu-inspired decorative pattern and photo window.',
-      mainImage: '/products/telugu_wedding_album_1784800221115.png',
+      mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974774/aakruti_albums/nblps2j3qtkiytajt64j.jpg',
       tags: ['Wedding']
     },
     {
