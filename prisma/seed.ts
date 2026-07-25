@@ -293,6 +293,21 @@ async function main() {
       shortDescription: 'Premium, high-quality leather that radiates sophistication and durability across cover and spreads.',
       mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784966840/aakruti_albums/ah6ican1epn4c6znop9p.png',
       tags: ['Wedding', 'Family']
+    },
+    {
+      name: 'Royal Red Velvet Wedding Album Set',
+      slug: 'royal-red-velvet-wedding-album-set',
+      collectionSlug: 'aakruti-signature',
+      shortDescription: 'Exquisite temple-red wedding album with gold embossing and matching presentation box set.',
+      description: 'Crafted with premium red velvet and leather, featuring a gold-framed central photo window and custom gold foil lettering with matching presentation box.',
+      coverMaterial: 'Red Velvet & Gold Leather',
+      albumStyle: 'Flush-Mount / Lay-Flat Box Set',
+      mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974774/aakruti_albums/nblps2j3qtkiytajt64j.jpg',
+      tags: ['Wedding', 'Engagement', 'Pre-Wedding'],
+      gallery: [
+        { imagePath: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974507/aakruti_albums/z9tgdf8jwwmhl85sdmme.png', imageType: 'spine_details', displayOrder: 1 },
+        { imagePath: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974513/aakruti_albums/rc1sxk7syq6nbyfthi3j.png', imageType: 'inside_spread', displayOrder: 2 }
+      ]
     }
   ];
 
