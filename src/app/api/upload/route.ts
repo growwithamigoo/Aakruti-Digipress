@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const file: File | null = data.get("file") as unknown as File;
 
     if (!file) {
-      return NextResponse.json({ success: false, message: "No file uploaded" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "No file provided" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
           },
           (error, result) => {
             if (error || !result) {
-              reject(error || new Error("Cloudinary upload failed"));
+              reject(error || new Error("Cloudinary stream upload failed"));
             } else {
               resolve(result);
             }
@@ -49,7 +49,16 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Fallback: Local filesystem upload
+    // On Netlify / Serverless hosting, filesystem is read-only
+    const isServerless = Boolean(process.env.NETLIFY || process.env.VERCEL);
+    if (isServerless) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "Cloudinary environment variables missing on Netlify! Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in Netlify Site Configuration -> Environment Variables." 
+      }, { status: 400 });
+    }
+
+    // Local filesystem upload (development only)
     const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
     const uploadDir = path.join(process.cwd(), "public", "uploads");
 
@@ -65,11 +74,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       url: fileUrl,
-      provider: "local",
-      message: "Uploaded locally. Add CLOUDINARY credentials in .env to upload to Cloudinary directly."
+      provider: "local"
     });
-  } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ success: false, message: "Upload failed" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Upload API error:", error);
+    return NextResponse.json({ 
+      success: false, 
+      message: error?.message || "Upload failed. Check Cloudinary settings on Netlify." 
+    }, { status: 500 });
   }
 }
