@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageCircle } from "lucide-react";
+import ProductImageGallery from "@/components/albums/ProductImageGallery";
 
 export const revalidate = 60;
 
@@ -23,8 +23,12 @@ export default async function AlbumProductDetailPage({ params }: { params: Promi
   }
 
   const allImages = [];
-  if (product.mainImage) allImages.push({ url: product.mainImage, type: 'cover' });
-  product.images.forEach(img => allImages.push({ url: img.imagePath, type: img.imageType }));
+  if (product.mainImage) {
+    allImages.push({ url: product.mainImage, type: 'cover' });
+  }
+  product.images.forEach(img => {
+    allImages.push({ url: img.imagePath, type: img.imageType });
+  });
 
   return (
     <div className="bg-gray-50 min-h-screen pt-24 pb-24">
@@ -37,30 +41,9 @@ export default async function AlbumProductDetailPage({ params }: { params: Promi
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
-          {/* Gallery Column */}
-          <div className="space-y-6 sticky top-24">
-            <div className="relative aspect-[4/3] w-full bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-sm">
-              {allImages.length > 0 ? (
-                <Image 
-                  src={allImages[0].url} 
-                  alt={product.name} 
-                  fill 
-                  className="object-cover" 
-                  priority
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400">No Image Available</div>
-              )}
-            </div>
-            {allImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
-                {allImages.slice(1).map((img, i) => (
-                  <div key={i} className="relative aspect-square bg-white rounded-xl overflow-hidden border border-gray-200 cursor-pointer hover:border-brand-cyan transition-colors">
-                    <Image src={img.url} alt={`${product.name} detail ${i+1}`} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Multi-View Interactive Gallery Column with Zoom */}
+          <div className="sticky top-24">
+            <ProductImageGallery images={allImages} productName={product.name} />
           </div>
 
           {/* Details Column */}

@@ -17,7 +17,17 @@ export async function createAlbumProduct(formData: FormData) {
   const status = formData.get("status") as string;
   const occasionIds = formData.getAll("occasionIds") as string[];
 
+  // Additional gallery images
+  const insideSpread = formData.get("gallery_inside_spread") as string;
+  const boxView = formData.get("gallery_box") as string;
+  const spineView = formData.get("gallery_spine") as string;
+
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+  const galleryItems = [];
+  if (insideSpread) galleryItems.push({ imagePath: insideSpread, imageType: "inside_spread", displayOrder: 1 });
+  if (boxView) galleryItems.push({ imagePath: boxView, imageType: "box_case", displayOrder: 2 });
+  if (spineView) galleryItems.push({ imagePath: spineView, imageType: "spine_details", displayOrder: 3 });
 
   await prisma.albumProduct.create({
     data: {
@@ -38,6 +48,9 @@ export async function createAlbumProduct(formData: FormData) {
         create: occasionIds.map((occasionId) => ({
           occasion: { connect: { id: occasionId } }
         }))
+      },
+      images: {
+        create: galleryItems
       }
     }
   });
@@ -60,12 +73,21 @@ export async function updateAlbumProduct(id: string, formData: FormData) {
   const status = formData.get("status") as string;
   const occasionIds = formData.getAll("occasionIds") as string[];
 
+  // Additional gallery images
+  const insideSpread = formData.get("gallery_inside_spread") as string;
+  const boxView = formData.get("gallery_box") as string;
+  const spineView = formData.get("gallery_spine") as string;
+
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-  // Delete existing occasions relation
-  await prisma.albumProductOccasion.deleteMany({
-    where: { albumProductId: id }
-  });
+  const galleryItems = [];
+  if (insideSpread) galleryItems.push({ imagePath: insideSpread, imageType: "inside_spread", displayOrder: 1 });
+  if (boxView) galleryItems.push({ imagePath: boxView, imageType: "box_case", displayOrder: 2 });
+  if (spineView) galleryItems.push({ imagePath: spineView, imageType: "spine_details", displayOrder: 3 });
+
+  // Delete existing relations
+  await prisma.albumProductOccasion.deleteMany({ where: { albumProductId: id } });
+  await prisma.albumProductImage.deleteMany({ where: { albumProductId: id } });
 
   await prisma.albumProduct.update({
     where: { id },
@@ -87,6 +109,9 @@ export async function updateAlbumProduct(id: string, formData: FormData) {
         create: occasionIds.map((occasionId) => ({
           occasion: { connect: { id: occasionId } }
         }))
+      },
+      images: {
+        create: galleryItems
       }
     }
   });

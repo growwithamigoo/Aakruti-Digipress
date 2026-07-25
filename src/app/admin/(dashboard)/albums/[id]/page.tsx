@@ -14,6 +14,9 @@ export default async function EditAlbumProductPage({ params }: { params: Promise
         include: {
           occasion: true
         }
+      },
+      images: {
+        orderBy: { displayOrder: 'asc' }
       }
     }
   });
