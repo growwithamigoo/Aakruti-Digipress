@@ -270,6 +270,25 @@ async function main() {
       shortDescription: 'Minimal navy-blue leather album with embossed logo area and matching case.',
       mainImage: '/products/corporate_presentation_album_1784800336893.png',
       tags: ['Corporate']
+    },
+    {
+      name: 'Aakruti - Flushmount Vintage Wood',
+      slug: 'aakruti-flushmount-vintage-wood',
+      collectionSlug: 'aakruti-signature',
+      shortDescription: 'Carefully designed wooden box that offers both durability and elegance for a standout presentation.',
+      mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784966933/aakruti_albums/smko7uy8baba8fuf8ofg.png',
+      tags: ['Wedding'],
+      gallery: [
+        { imagePath: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784966840/aakruti_albums/ah6ican1epn4c6znop9p.png', imageType: 'inside_spread', displayOrder: 1 }
+      ]
+    },
+    {
+      name: 'Premium Aakruti Mesmera',
+      slug: 'premium-aakruti-mesmera',
+      collectionSlug: 'aakruti-premium',
+      shortDescription: 'Premium, high-quality leather that radiates sophistication and durability across cover and spreads.',
+      mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784966840/aakruti_albums/ah6ican1epn4c6znop9p.png',
+      tags: ['Wedding', 'Family']
     }
   ];
 
@@ -282,7 +301,8 @@ async function main() {
         mainImage: p.mainImage,
         status: 'Published',
         collection: { connect: { slug: p.collectionSlug } },
-        occasions: { create: getOccasions(p.tags) }
+        occasions: { create: getOccasions(p.tags) },
+        images: p.gallery ? { create: p.gallery } : undefined
       }
     });
   }
