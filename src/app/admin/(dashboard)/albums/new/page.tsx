@@ -4,7 +4,10 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default async function NewAlbumProductPage() {
-  const collections = await prisma.albumCollection.findMany({ where: { isActive: true } });
+  const [collections, occasions] = await Promise.all([
+    prisma.albumCollection.findMany({ where: { isActive: true }, orderBy: { displayOrder: 'asc' } }),
+    prisma.albumOccasion.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } })
+  ]);
   
   return (
     <div className="p-6 max-w-4xl">
@@ -16,7 +19,7 @@ export default async function NewAlbumProductPage() {
         <p className="text-gray-500">Create a new physical album product for the catalogue.</p>
       </div>
 
-      <AlbumForm collections={collections} />
+      <AlbumForm collections={collections} occasions={occasions} />
     </div>
   );
 }

@@ -6,11 +6,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createAlbumProduct, updateAlbumProduct } from "@/actions/albumActions";
 
-export default function AlbumForm({ initialData, collections }: { initialData?: any, collections: any[] }) {
+export default function AlbumForm({ 
+  initialData, 
+  collections,
+  occasions = [] 
+}: { 
+  initialData?: any, 
+  collections: any[],
+  occasions?: any[]
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialData?.mainImage || "");
   const [uploading, setUploading] = useState(false);
   const [provider, setProvider] = useState<string | null>(null);
+
+  const initialOccasionIds = initialData?.occasions?.map((o: any) => o.occasionId || o.occasion?.id) || [];
+  const [selectedOccasionIds, setSelectedOccasionIds] = useState<string[]>(initialOccasionIds);
+
+  const handleOccasionToggle = (id: string) => {
+    setSelectedOccasionIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -76,6 +93,47 @@ export default function AlbumForm({ initialData, collections }: { initialData?: 
       <div className="space-y-2">
         <label className="text-sm font-semibold">Detailed Description</label>
         <Textarea name="description" defaultValue={initialData?.description} rows={4} placeholder="Full description for the product detail page." />
+      </div>
+
+      {/* Occasions / Album Category Buttons Selection */}
+      <div className="space-y-3 p-5 bg-gray-50 rounded-xl border border-gray-100">
+        <label className="text-sm font-semibold text-gray-900 block">
+          Occasions & Categories (Pills displayed on card)
+        </label>
+        <p className="text-xs text-gray-500 mb-3">
+          Select one or more occasions (e.g. Wedding, Corporate, Pre-Wedding, Portrait) to display pill buttons at the bottom of the product card.
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {occasions.map((occ) => {
+            const isChecked = selectedOccasionIds.includes(occ.id);
+            return (
+              <label 
+                key={occ.id}
+                className={`cursor-pointer inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all border ${
+                  isChecked 
+                    ? 'bg-brand-charcoal text-white border-brand-charcoal shadow-sm' 
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                <input 
+                  type="checkbox"
+                  name="option_dummy"
+                  checked={isChecked}
+                  onChange={() => handleOccasionToggle(occ.id)}
+                  className="sr-only"
+                />
+                {isChecked && <span className="text-xs">✓</span>}
+                {occ.name}
+              </label>
+            );
+          })}
+        </div>
+
+        {/* Hidden inputs to send occasionIds in FormData */}
+        {selectedOccasionIds.map((id) => (
+          <input key={id} type="hidden" name="occasionIds" value={id} />
+        ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

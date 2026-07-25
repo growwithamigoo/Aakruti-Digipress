@@ -15,6 +15,7 @@ export async function createAlbumProduct(formData: FormData) {
   const availableColours = formData.get("availableColours") as string;
   const mainImage = formData.get("mainImage") as string;
   const status = formData.get("status") as string;
+  const occasionIds = formData.getAll("occasionIds") as string[];
 
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
@@ -32,6 +33,11 @@ export async function createAlbumProduct(formData: FormData) {
       status,
       collection: {
         connect: { id: collectionId }
+      },
+      occasions: {
+        create: occasionIds.map((occasionId) => ({
+          occasion: { connect: { id: occasionId } }
+        }))
       }
     }
   });
@@ -52,8 +58,14 @@ export async function updateAlbumProduct(id: string, formData: FormData) {
   const availableColours = formData.get("availableColours") as string;
   const mainImage = formData.get("mainImage") as string;
   const status = formData.get("status") as string;
+  const occasionIds = formData.getAll("occasionIds") as string[];
 
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+  // Delete existing occasions relation
+  await prisma.albumProductOccasion.deleteMany({
+    where: { albumProductId: id }
+  });
 
   await prisma.albumProduct.update({
     where: { id },
@@ -70,6 +82,11 @@ export async function updateAlbumProduct(id: string, formData: FormData) {
       status,
       collection: {
         connect: { id: collectionId }
+      },
+      occasions: {
+        create: occasionIds.map((occasionId) => ({
+          occasion: { connect: { id: occasionId } }
+        }))
       }
     }
   });

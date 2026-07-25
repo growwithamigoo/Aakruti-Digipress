@@ -8,15 +8,25 @@ export default async function EditAlbumProductPage({ params }: { params: Promise
   const resolvedParams = await params;
   
   const product = await prisma.albumProduct.findUnique({
-    where: { id: resolvedParams.id }
+    where: { id: resolvedParams.id },
+    include: {
+      occasions: {
+        include: {
+          occasion: true
+        }
+      }
+    }
   });
 
   if (!product) {
     notFound();
   }
 
-  const collections = await prisma.albumCollection.findMany({ where: { isActive: true } });
-  
+  const [collections, occasions] = await Promise.all([
+    prisma.albumCollection.findMany({ where: { isActive: true }, orderBy: { displayOrder: 'asc' } }),
+    prisma.albumOccasion.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } })
+  ]);
+
   return (
     <div className="p-6 max-w-4xl">
       <div className="mb-8">
@@ -27,7 +37,7 @@ export default async function EditAlbumProductPage({ params }: { params: Promise
         <p className="text-gray-500">Update the details for this physical album product.</p>
       </div>
 
-      <AlbumForm initialData={product} collections={collections} />
+      <AlbumForm initialData={product} collections={collections} occasions={occasions} />
     </div>
   );
 }

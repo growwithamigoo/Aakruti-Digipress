@@ -102,14 +102,22 @@ export default async function AlbumsCataloguePage({ searchParams }: { searchPara
                     
                     {/* Tags/Pills */}
                     <div className="mt-auto flex flex-wrap gap-2 pt-4 border-t border-gray-100">
-                      {product.occasions.slice(0, 3).map((po) => (
-                        <span key={po.occasion.id} className="bg-gray-50 text-gray-600 rounded-full px-3 py-1 text-[11px] font-semibold border border-gray-200 uppercase tracking-wider">
-                          {po.occasion.name}
-                        </span>
-                      ))}
-                      {product.occasions.length > 3 && (
-                        <span className="bg-gray-50 text-gray-400 rounded-full px-3 py-1 text-[11px] font-semibold border border-gray-200">
-                          +{product.occasions.length - 3}
+                      {product.occasions.length > 0 ? (
+                        <>
+                          {product.occasions.slice(0, 3).map((po) => (
+                            <span key={po.occasion.id} className="bg-gray-50 text-gray-600 rounded-full px-3 py-1 text-[11px] font-semibold border border-gray-200 uppercase tracking-wider">
+                              {po.occasion.name}
+                            </span>
+                          ))}
+                          {product.occasions.length > 3 && (
+                            <span className="bg-gray-50 text-gray-400 rounded-full px-3 py-1 text-[11px] font-semibold border border-gray-200">
+                              +{product.occasions.length - 3}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="bg-gray-50 text-gray-600 rounded-full px-3 py-1 text-[11px] font-semibold border border-gray-200 uppercase tracking-wider">
+                          {product.collection.name.replace('Aakruti ', '')}
                         </span>
                       )}
                     </div>
