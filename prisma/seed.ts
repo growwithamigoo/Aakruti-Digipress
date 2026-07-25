@@ -205,7 +205,11 @@ async function main() {
       collectionSlug: 'aakruti-heritage',
       shortDescription: 'Temple-red cover with subtle gold Telugu-inspired decorative pattern and photo window.',
       mainImage: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974774/aakruti_albums/nblps2j3qtkiytajt64j.jpg',
-      tags: ['Wedding']
+      tags: ['Wedding'],
+      gallery: [
+        { imagePath: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974513/aakruti_albums/rc1sxk7syq6nbyfthi3j.png', imageType: 'inside_spread', displayOrder: 1 },
+        { imagePath: 'https://res.cloudinary.com/z6vooavz/image/upload/v1784974507/aakruti_albums/z9tgdf8jwwmhl85sdmme.png', imageType: 'spine_details', displayOrder: 2 }
+      ]
     },
     {
       name: 'First Birthday Album',
