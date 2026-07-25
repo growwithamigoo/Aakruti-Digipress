@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function AlbumsCataloguePage({ searchParams }: { searchParams: Promise<{ collection?: string, occasion?: string }> }) {
   const resolvedSearchParams = await searchParams;

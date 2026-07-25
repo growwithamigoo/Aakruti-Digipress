@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import ProductImageGallery from "@/components/albums/ProductImageGallery";
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function AlbumProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
