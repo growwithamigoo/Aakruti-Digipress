@@ -10,6 +10,7 @@ export default function AlbumForm({ initialData, collections }: { initialData?: 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialData?.mainImage || "");
   const [uploading, setUploading] = useState(false);
+  const [provider, setProvider] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -27,6 +28,9 @@ export default function AlbumForm({ initialData, collections }: { initialData?: 
       const data = await res.json();
       if (data.url) {
         setImageUrl(data.url);
+        setProvider(data.provider || null);
+      } else {
+        alert(data.message || "Failed to upload image");
       }
     } catch (error) {
       console.error("Upload failed", error);
@@ -99,43 +103,74 @@ export default function AlbumForm({ initialData, collections }: { initialData?: 
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-semibold">Status</label>
+        <label className="text-sm font-semibold">Status (Live Visibility)</label>
         <select 
           name="status" 
           defaultValue={initialData?.status || "Published"} 
           className="w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           style={{ height: "36px" }}
         >
-          <option value="Published">Published</option>
-          <option value="Draft">Draft</option>
+          <option value="Published">Published (Visible on Live Website)</option>
+          <option value="Draft">Draft (Client Review / Admin Only)</option>
         </select>
       </div>
 
-      <div className="space-y-4">
-        <label className="text-sm font-semibold block">Main Product Image (4:3 aspect ratio recommended) *</label>
+      {/* Cloudinary & Image Upload Section */}
+      <div className="space-y-4 p-6 bg-gray-50 rounded-xl border border-gray-100">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-gray-900 block">
+            Main Product Image (Cloudinary Storage) *
+          </label>
+          {provider === "cloudinary" || imageUrl.includes("cloudinary.com") ? (
+            <span className="text-[11px] font-bold bg-green-100 text-green-700 px-2.5 py-1 rounded-full uppercase tracking-wider">
+              Cloudinary Live
+            </span>
+          ) : imageUrl ? (
+            <span className="text-[11px] font-bold bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full uppercase tracking-wider">
+              Local Storage
+            </span>
+          ) : null}
+        </div>
+
         <Input type="hidden" name="mainImage" value={imageUrl} />
         
         {imageUrl && (
-          <div className="relative w-64 h-48 rounded-lg overflow-hidden border border-gray-200">
+          <div className="relative w-64 h-48 rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
             <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
           </div>
         )}
-        
-        <div className="flex items-center gap-4">
-          <Input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageUpload} 
-            disabled={uploading}
-            className="w-auto"
-          />
-          {uploading && <span className="text-sm text-gray-500">Uploading...</span>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block font-medium">Upload Image File</label>
+            <div className="flex items-center gap-3">
+              <Input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+                disabled={uploading}
+                className="w-full bg-white"
+              />
+              {uploading && <span className="text-xs text-brand-cyan font-bold animate-pulse">Uploading...</span>}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block font-medium">Or Paste Direct Image / Cloudinary URL</label>
+            <Input 
+              type="text" 
+              placeholder="https://res.cloudinary.com/... or image link" 
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="bg-white"
+            />
+          </div>
         </div>
       </div>
 
       <div className="pt-4 border-t border-gray-100">
         <Button type="submit" disabled={isSubmitting || uploading} className="w-full md:w-auto px-8 bg-brand-charcoal text-white hover:bg-black">
-          {isSubmitting ? "Saving..." : (initialData ? "Update Product" : "Create Product")}
+          {isSubmitting ? "Saving & Updating Live..." : (initialData ? "Update Live Album Product" : "Create & Publish Live Album")}
         </Button>
       </div>
     </form>
